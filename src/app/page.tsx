@@ -12,6 +12,7 @@ export default function Home() {
             className="w-34 h-20 mx-auto mb-6"
             src="/logo.png"
             alt="website logo"
+            link="/"
           />
           <LoginForm />
         </div>

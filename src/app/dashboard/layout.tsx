@@ -2,22 +2,12 @@
 
 import { ReactNode } from "react";
 import Sidebar from "@/components/navigation/Sidebar";
-import { axiosInstance } from "@/lib/axios";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import ApplicationLogo from "@/components/ui/applicationLogo";
 import { LogOut } from "lucide-react";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post("/api/auth/logout", {});
-      router.replace("/auth/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  };
+  const { logout } = useAuth();
 
   return (
     <div className="flex">
@@ -29,11 +19,12 @@ export default function Layout({ children }: { children: ReactNode }) {
             className="h-16 w-32"
             src="/logo.png"
             alt="website logo"
+            link="/dashboard"
           />
 
           <LogOut
             size={25}
-            onClick={() => handleLogout()}
+            onClick={() => logout()}
             className="text-brand cursor-pointer"
           />
         </header>

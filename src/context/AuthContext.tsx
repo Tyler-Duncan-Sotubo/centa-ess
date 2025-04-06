@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/axios";
+import { useRouter } from "next/navigation";
 
 // 🔹 Define User Type
 interface User {
@@ -22,6 +23,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   refreshUser: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   // 🔹 Fetch Authenticated User and Save to Local Storage
   const refreshUser = async () => {
@@ -58,8 +61,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     refreshUser();
   }, []);
 
+  const logout = async () => {
+    try {
+      await axiosInstance.post("/api/auth/logout", {}); // Call API to log out
+      localStorage.removeItem("user"); // ✅ Clear storage on failure
+      setUser(null); // Clear user state
+      router.replace("/auth/login"); // Redirect to login page
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

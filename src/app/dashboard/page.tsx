@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPayslipSummary } from "@/server/payroll";
 import { PayrollRecord } from "@/types/payroll.type";
@@ -15,7 +15,14 @@ import Loading from "@/components/ui/loading";
 import Link from "next/link";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      refreshUser();
+    }
+  }, [refreshUser, user]);
+
   const {
     data: payrollSummary,
     isLoading: loadingPayroll,
@@ -24,6 +31,7 @@ const Dashboard = () => {
     queryKey: ["payrollSummary", user?.id],
     queryFn: async () =>
       (await fetchPayslipSummary(user?.id)) as PayrollRecord[],
+    enabled: !!user?.id,
   });
 
   if (loadingPayroll) return <Loading />;

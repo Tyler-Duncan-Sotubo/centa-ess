@@ -2,21 +2,12 @@
 
 import { Home, LogOut, User, Coins, Banknote, HandCoins } from "lucide-react";
 import Link from "next/link";
-import { axiosInstance } from "@/lib/axios";
-import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import ApplicationLogo from "../ui/applicationLogo";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post("/api/auth/logout", {});
-      router.replace("/auth/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  };
+  const { logout } = useAuth();
 
   return (
     <div className="flex">
@@ -28,6 +19,7 @@ export default function Sidebar() {
           className="h-20 w-32"
           src="/logo.png"
           alt="website logo"
+          link="/dashboard"
         />
 
         <p className="mb-2 text-muted-foreground uppercase text-sm">Menu</p>
@@ -60,7 +52,7 @@ export default function Sidebar() {
           <Link
             href=""
             className=" text-red-500 flex gap-2 text-lg"
-            onClick={handleLogout}
+            onClick={logout}
           >
             <LogOut size={24} />
             <span className="text-md">Logout</span>
