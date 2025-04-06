@@ -40,7 +40,7 @@ const SalaryDetails = ({
   const deductions = {
     paye: userGroup?.apply_paye ? monthlyGross * payeRate : 0,
     pension: userGroup?.apply_pension ? monthlyGross * employeePensionRate : 0,
-    nhf: userGroup?.apply_nhf ? monthlyGross * nhfRate : 0,
+    nhf: userGroup?.apply_nhf && user.apply_nhf ? monthlyGross * nhfRate : 0,
     total: 0,
   };
 
@@ -111,7 +111,13 @@ const SalaryDetails = ({
 
           {/* Deductions Section */}
           <div>
-            <h4 className="text-xl my-4 font-semibold">Deductions</h4>
+            <div className="mb-5">
+              <h4 className="text-xl font-semibold">Estimated Deductions</h4>
+              <h5 className="text-sm">
+                Note: This is an estimate and may vary based on your tax
+                obligations.
+              </h5>
+            </div>
             <div className="space-y-4 bg-white p-4 rounded-lg shadow-md">
               {Object.entries(deductions)
                 .filter(([key]) => key !== "total")
@@ -122,10 +128,10 @@ const SalaryDetails = ({
                   >
                     <span>
                       {key === "paye"
-                        ? "PAYE (5%)"
+                        ? "PAYE"
                         : key === "nhf"
-                        ? "NHF (2.5%)"
-                        : "Pension (8%)"}
+                        ? "NHF"
+                        : "Pension"}
                     </span>
                     <span className="font-semibold">
                       {formatCurrency(value)}

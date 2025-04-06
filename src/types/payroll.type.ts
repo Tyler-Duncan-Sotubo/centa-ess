@@ -10,4 +10,5 @@ export type PayrollRecord = {
   salaryAdvance: number;
   taxableIncome: number;
   payslip_pdf_url: string;
+  paymentStatus: string;
 };

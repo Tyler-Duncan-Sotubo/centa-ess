@@ -63,7 +63,7 @@ function UserProfile({ user }: { user: User | undefined }) {
   const updateProfile = useUpdateMutation({
     endpoint: "api/auth/profile",
     successMessage: "Profile Updated",
-    refetchKey: "user",
+    refetchKey: "user profile",
   });
 
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
@@ -90,7 +90,7 @@ function UserProfile({ user }: { user: User | undefined }) {
               >
                 <input {...getInputProps()} />
                 {uploadedImage || form.getValues("avatar") ? (
-                  <div className="relative w-full h-32">
+                  <div className="relative w-32 h-32">
                     <Image
                       src={uploadedImage || form.getValues("avatar") || ""}
                       alt="Profile Image"

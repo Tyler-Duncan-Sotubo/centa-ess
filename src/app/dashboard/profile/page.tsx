@@ -13,7 +13,7 @@ const UserProfilePage = () => {
     isLoading,
     isError,
   } = useQuery<User>({
-    queryKey: ["user", "profile"],
+    queryKey: ["profile"],
     queryFn: fetchUserProfile,
   });
 

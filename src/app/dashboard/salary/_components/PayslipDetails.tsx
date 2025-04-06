@@ -17,11 +17,15 @@ const PayslipPage = ({
   payslips: PayrollRecord[] | undefined;
   salaryBreakdown: ISalaryBreakdown;
 }) => {
-  const [selectedPayslip, setSelectedPayslip] = useState<string | null>(
-    payslips ? payslips[0]?.payslip_id : null
+  const paidPayslips = payslips?.filter(
+    (record) => record.paymentStatus === "paid"
   );
 
-  const selectedPayslipDetails = payslips?.find(
+  const [selectedPayslip, setSelectedPayslip] = useState<string | null>(
+    paidPayslips ? paidPayslips[0]?.payslip_id : null
+  );
+
+  const selectedPayslipDetails = paidPayslips?.find(
     (payslip) => payslip.payslip_id === selectedPayslip
   );
 
@@ -35,12 +39,12 @@ const PayslipPage = ({
         {/* Left Section: List of Payslips */}
         <div className="md:w-1/3 w-full">
           <h2 className="font-semibold text-xl my-4">
-            {payslips && payslips.length > 0
+            {paidPayslips && paidPayslips.length > 0
               ? "My Payslips"
               : "No Payslips Available"}
           </h2>
           <div className="space-y-4">
-            {payslips?.map((payslip) => (
+            {paidPayslips?.map((payslip) => (
               <div
                 key={payslip.payslip_id}
                 role="listitem"

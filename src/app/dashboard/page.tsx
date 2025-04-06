@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
+import { fetchUserProfile } from "@/server/user";
+import { User } from "@/types/user.type";
 
 const Dashboard = () => {
   const { user, refreshUser } = useAuth();
@@ -34,8 +36,21 @@ const Dashboard = () => {
     enabled: !!user?.id,
   });
 
-  if (loadingPayroll) return <Loading />;
-  if (errorPayroll) return <div>Error loading payroll data</div>;
+  const {
+    data: profile,
+    isLoading,
+    isError,
+  } = useQuery<User>({
+    queryKey: ["profile"],
+    queryFn: fetchUserProfile,
+  });
+
+  if (isLoading || loadingPayroll) return <Loading />;
+  if (isError || errorPayroll) return <div>Error loading payroll data</div>;
+
+  const completedPayrolls = payrollSummary?.filter(
+    (record) => record.paymentStatus === "paid"
+  );
 
   return (
     <section className="mt-4 mb-28">
@@ -53,13 +68,14 @@ const Dashboard = () => {
 
         <div className="bg-white p-5 rounded-b-md flex flex-col md:flex-row md:justify-between">
           <div className="flex  space-x-3">
-            <Image
-              src={user?.avatar || "/user-thumbnail.png"}
-              alt="User Avatar"
-              width={60}
-              height={60}
-              className="rounded-full"
-            />
+            <div className="relative w-16 h-16">
+              <Image
+                src={profile?.avatar || "/user-thumbnail.png"}
+                alt="User Avatar"
+                fill
+                className="rounded-full"
+              />
+            </div>
             <div className="md:text-left">
               <h2 className="text-xl md:text-2xl font-semibold mb-1">
                 {user?.first_name} {user?.last_name}
@@ -81,16 +97,16 @@ const Dashboard = () => {
       <section className="flex flex-col md:flex-row w-full space-y-8 md:space-x-8 my-10">
         {/* Payroll Summary Section */}
         <div className="w-full md:w-2/3">
-          {(payrollSummary ?? []).length > 0 ? (
+          {(completedPayrolls ?? []).length > 0 ? (
             <div className="shadow-sm rounded-md p-4 bg-white">
               <div className="flex items-center mb-6">
                 <Banknote size={24} className="mr-2" />
                 <p className="text-lg md:text-xl font-bold">Your Payslips</p>
               </div>
 
-              <Tabs defaultValue={payrollSummary?.[0]?.payroll_date}>
+              <Tabs defaultValue={completedPayrolls?.[0]?.payroll_date}>
                 <TabsList className="flex gap-2 mb-3 md:text-sm ">
-                  {payrollSummary?.map((record) => (
+                  {completedPayrolls?.map((record) => (
                     <TabsTrigger
                       key={record.payslip_id}
                       value={record.payroll_date}
@@ -104,7 +120,7 @@ const Dashboard = () => {
                   ))}
                 </TabsList>
 
-                {payrollSummary?.map((record) => (
+                {completedPayrolls?.map((record) => (
                   <TabsContent
                     key={record.payslip_id}
                     value={record.payroll_date}

@@ -16,6 +16,7 @@ interface User {
   annual_gross: number;
   group_id: string;
   avatar: string;
+  apply_nhf: boolean;
 }
 
 // 🔹 Define Context Type
