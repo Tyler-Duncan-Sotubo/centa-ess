@@ -73,7 +73,7 @@ export default function Sidebar() {
             label="Salary"
           />
           <NavItem
-            href="/dash board/salary-advance"
+            href="/dashboard/salary-advance"
             icon={<HandCoins size={24} />}
             label="Loan"
           />

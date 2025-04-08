@@ -12,9 +12,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Sidebar />
       <main className="md:ml-[18%] md:mb-0 w-full p-6 bg-white min-h-screen">
         {/* Header */}
-        <header className="flex justify-between items-center mb-2 md:hidden">
+        <header className="flex justify-between items-center mb-10 md:hidden">
           <ApplicationLogo
-            className="h-16 w-32"
+            className="h-16 w-28"
             src="/logo.png"
             alt="website logo"
             link="/dashboard"
