@@ -5,6 +5,7 @@ import Sidebar from "@/components/navigation/Sidebar";
 import ApplicationLogo from "@/components/ui/applicationLogo";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import ScrollToTop from "@/components/navigation/ScrollToTop";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -31,6 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             className="text-brand cursor-pointer"
           />
         </header>
+        <ScrollToTop />
         {children}
       </main>
     </div>
