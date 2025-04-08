@@ -2,6 +2,7 @@ import { axiosInstance } from "@/lib/axios";
 import { extractErrorMessage } from "@/utils/errorHandler";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type UpdateMutationParams<T> = {
@@ -26,6 +27,7 @@ export function useUpdateMutation<T>({
 }: UpdateMutationParams<T>) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   /**
    * Executes the mutation.
@@ -43,6 +45,9 @@ export function useUpdateMutation<T>({
         method,
         url: endpoint,
         data,
+        headers: {
+          Authorization: `Bearer ${session?.backendTokens.accessToken}`,
+        },
       });
 
       if (res.data) {

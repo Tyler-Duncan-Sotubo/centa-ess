@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPayslipSummary } from "@/server/payroll";
 import { PayrollRecord } from "@/types/payroll.type";
-import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PayrollSummaryPieChart } from "@/components/common/charts/PayrollSummaryPieChart";
 import { formatDate } from "date-fns";
@@ -13,27 +11,39 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
-import { fetchUserProfile } from "@/server/user";
 import { User } from "@/types/user.type";
+import { useSession } from "next-auth/react";
 
 const Dashboard = () => {
-  const { user, refreshUser } = useAuth();
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    if (!user) {
-      refreshUser();
+  const fetchPayslipSummary = async (id: string | undefined) => {
+    const res = await fetch(`/api/payroll/employee-payslip-summary/${id}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch company data");
     }
-  }, [refreshUser, user]);
+    const data = await res.json();
+    return data.data.data;
+  };
+
+  const fetchUserProfile = async () => {
+    const res = await fetch(`/api/profile`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch company data");
+    }
+    const data = await res.json();
+    return data.data;
+  };
 
   const {
     data: payrollSummary,
     isLoading: loadingPayroll,
     isError: errorPayroll,
   } = useQuery({
-    queryKey: ["payrollSummary", user?.id],
+    queryKey: ["payrollSummary", session?.user?.id],
     queryFn: async () =>
-      (await fetchPayslipSummary(user?.id)) as PayrollRecord[],
-    enabled: !!user?.id,
+      (await fetchPayslipSummary(session?.user?.id)) as PayrollRecord[],
+    enabled: !!session?.user?.id,
   });
 
   const {
@@ -58,7 +68,7 @@ const Dashboard = () => {
       <div className="shadow-md rounded-xl">
         <div className="bg-brand text-white p-5 rounded-t-md">
           <h2 className="text-2xl font-semibold mb-1">
-            Welcome to {user?.company_name}&apos;s ESS
+            Welcome to {session?.user?.company_name}&apos;s ESS
           </h2>
           <p className="w-full md:w-1/2 text-sm md:text-base">
             View payroll summary, update profile, request salary advance, and
@@ -78,10 +88,10 @@ const Dashboard = () => {
             </div>
             <div className="md:text-left">
               <h2 className="text-xl md:text-2xl font-semibold mb-1">
-                {user?.first_name} {user?.last_name}
+                {session?.user?.first_name} {session?.user?.last_name}
               </h2>
               <p className="font-medium text-textSecondary capitalize">
-                {user?.job_title} at {user?.company_name}
+                {session?.user?.job_title} at {session?.user?.company_name}
               </p>
             </div>
           </div>

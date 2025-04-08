@@ -2,13 +2,11 @@
 
 import { Home, LogOut, User, Coins, Banknote, HandCoins } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 import ApplicationLogo from "../ui/applicationLogo";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
-  const { logout } = useAuth();
-
   return (
     <div className="flex">
       {/* Static Sidebar (Desktop) */}
@@ -52,7 +50,12 @@ export default function Sidebar() {
           <Link
             href=""
             className=" text-red-500 flex gap-2 text-lg"
-            onClick={logout}
+            onClick={() => {
+              signOut({
+                callbackUrl: "/auth/login",
+                redirect: true,
+              });
+            }}
           >
             <LogOut size={24} />
             <span className="text-md">Logout</span>
@@ -70,7 +73,7 @@ export default function Sidebar() {
             label="Salary"
           />
           <NavItem
-            href="/dashboard/salary-advance"
+            href="/dash board/salary-advance"
             icon={<HandCoins size={24} />}
             label="Loan"
           />

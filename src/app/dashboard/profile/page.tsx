@@ -3,11 +3,19 @@
 import React from "react";
 import UserProfile from "./UserProfile";
 import { User } from "@/types/user.type";
-import { fetchUserProfile } from "@/server/user";
 import Loading from "@/components/ui/loading";
 import { useQuery } from "@tanstack/react-query";
 
 const UserProfilePage = () => {
+  const fetchUserProfile = async () => {
+    const res = await fetch(`/api/profile`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch company data");
+    }
+    const data = await res.json();
+    return data.data;
+  };
+
   const {
     data: user,
     isLoading,

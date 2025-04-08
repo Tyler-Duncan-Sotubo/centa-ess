@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { IPayGroup } from "@/types/group.type";
 import { ISalaryBreakdown } from "@/types/salary.type";
@@ -14,13 +14,15 @@ const SalaryDetails = ({
   payGroup: IPayGroup[];
   salaryBreakdown: ISalaryBreakdown;
 }) => {
-  const { user } = useAuth();
+  const { data: session, status } = useSession();
 
-  if (!user) return <Loading />;
+  if (status === "loading") return <Loading />;
 
-  const userGroup = payGroup.find((group) => group.id === user.group_id);
-  const annualGross = user.annual_gross;
-  const monthlyGross = annualGross / 12;
+  const userGroup = payGroup.find(
+    (group) => group.id === session?.user.group_id
+  );
+  const annualGross = session?.user.annual_gross;
+  const monthlyGross = (annualGross ?? 0) / 12;
 
   const earnings: { [key: string]: number } = {
     basic: (monthlyGross * parseFloat(salaryBreakdown.basic)) / 100,
@@ -40,7 +42,10 @@ const SalaryDetails = ({
   const deductions = {
     paye: userGroup?.apply_paye ? monthlyGross * payeRate : 0,
     pension: userGroup?.apply_pension ? monthlyGross * employeePensionRate : 0,
-    nhf: userGroup?.apply_nhf && user.apply_nhf ? monthlyGross * nhfRate : 0,
+    nhf:
+      userGroup?.apply_nhf && session?.user.apply_nhf
+        ? monthlyGross * nhfRate
+        : 0,
     total: 0,
   };
 
@@ -77,7 +82,7 @@ const SalaryDetails = ({
             Monthly Gross: {formatCurrency(monthlyGross)}
           </h3>
           <p className="text-sm text-textSecondary">
-            Annual Gross: {formatCurrency(annualGross)}
+            Annual Gross: {formatCurrency(annualGross ?? 0)}
           </p>
         </div>
 

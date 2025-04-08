@@ -2,13 +2,11 @@
 
 import { ReactNode } from "react";
 import Sidebar from "@/components/navigation/Sidebar";
-import { useAuth } from "@/context/AuthContext";
 import ApplicationLogo from "@/components/ui/applicationLogo";
 import { LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { logout } = useAuth();
-
   return (
     <div className="flex">
       <Sidebar />
@@ -24,7 +22,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 
           <LogOut
             size={25}
-            onClick={() => logout()}
+            onClick={() =>
+              signOut({
+                callbackUrl: "/auth/login",
+                redirect: true,
+              })
+            }
             className="text-brand cursor-pointer"
           />
         </header>

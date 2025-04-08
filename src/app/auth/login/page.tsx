@@ -14,16 +14,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import FormError from "@/components/ui/form-error";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { loginSchema } from "../schema/login";
-import { axiosInstance, isAxiosError } from "@/lib/axios";
+import { isAxiosError } from "@/lib/axios";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function LoginForm() {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -32,8 +34,6 @@ function LoginForm() {
       password: "",
     },
   });
-
-  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     const email = values.email;
@@ -47,12 +47,21 @@ function LoginForm() {
     setError(null);
 
     try {
-      const res = await axiosInstance.post("/api/auth/login", values, {
-        withCredentials: true,
+      // Call the NextAuth signIn function
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-      if (res.status === 200) {
-        router.push(`/dashboard`);
+      if (res?.error) {
+        setError(res.error);
+        return {
+          error: getErrorMessage(res.error),
+        };
       }
+
+      // Handle successful login here
+      router.push("/dashboard");
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         setError(error.response.data.message);

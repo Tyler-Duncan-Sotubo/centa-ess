@@ -3,17 +3,42 @@
 import SalaryDetails from "./_components/SalaryDetails";
 import PayslipPage from "./_components/PayslipDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchSalaryBreakdown } from "@/server/salary";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPayGroup } from "@/server/group";
 import { PayrollRecord } from "@/types/payroll.type";
-import { fetchPayslipSummary } from "@/server/payroll";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import Loading from "@/components/ui/loading";
 import PageHeader from "@/components/common/PageHeader";
 
 const Salary = () => {
-  const { user } = useAuth();
+  const { data: session } = useSession();
+
+  const fetchPayslipSummary = async (id: string | undefined) => {
+    const res = await fetch(`/api/payroll/employee-payslip-summary/${id}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch company data");
+    }
+    const data = await res.json();
+    return data.data.data;
+  };
+
+  const fetchPayGroup = async () => {
+    const res = await fetch("/api/company/pay-groups");
+    if (!res.ok) {
+      throw new Error("Failed to fetch company data");
+    }
+    const data = await res.json();
+    return data.data.data;
+  };
+
+  const fetchSalaryBreakdown = async () => {
+    const res = await fetch("/api/payroll/salary-breakdown");
+    if (!res.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+    const data = await res.json();
+    return data.data.data;
+  };
+
   const {
     data: salaryBreakdown,
     isLoading: loadingSalary,
@@ -37,9 +62,10 @@ const Salary = () => {
     isLoading: loadingPayroll,
     isError: errorPayroll,
   } = useQuery({
-    queryKey: ["payrollSummary", user?.id],
+    queryKey: ["payrollSummary", session?.user?.id],
     queryFn: async () =>
-      (await fetchPayslipSummary(user?.id)) as PayrollRecord[],
+      (await fetchPayslipSummary(session?.user?.id)) as PayrollRecord[],
+    enabled: !!session?.user?.id,
   });
 
   if (loadingSalary || loadingPayGroup || loadingPayroll) return <Loading />;

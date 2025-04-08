@@ -2,6 +2,7 @@ import { axiosInstance } from "@/lib/axios";
 import { extractErrorMessage } from "@/utils/errorHandler";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type CreateMutationParams<T> = {
@@ -25,6 +26,7 @@ export function useCreateMutation<T>({
 }: CreateMutationParams<T>) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   /**
    * Executes the mutation.
@@ -40,8 +42,11 @@ export function useCreateMutation<T>({
     onClose?: () => void
   ) => {
     try {
-      const res = await axiosInstance.post(endpoint, data);
-
+      const res = await axiosInstance.post(endpoint, data, {
+        headers: {
+          Authorization: `Bearer ${session?.backendTokens.accessToken}`,
+        },
+      });
       if (res.data) {
         toast({
           title: successMessage,
