@@ -39,14 +39,15 @@ const EmployeeTaxDetails = ({
   setIsDirty: (dirty: boolean) => void;
 }) => {
   const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof employeeTaxSchema>>({
     resolver: zodResolver(employeeTaxSchema),
     defaultValues: {
       tin: employee?.employee_tax_details?.tin || "",
+      pension_pin: employee?.employee_tax_details?.pension_pin || "",
+      nhf_number: employee?.employee_tax_details?.nhf_number || "",
       state_of_residence:
         employee?.employee_tax_details?.state_of_residence || "",
-      other_reliefs: employee?.employee_tax_details?.other_reliefs || 0,
-      has_exemptions: employee?.employee_tax_details?.has_exemptions || false,
     },
   });
 
@@ -120,41 +121,29 @@ const EmployeeTaxDetails = ({
               </FormItem>
             )}
           />
+
           <FormField
-            name="other_reliefs"
+            name="pension_pin"
             control={form.control}
             render={({ field }) => (
               <FormItem className="mb-6">
-                <FormLabel>Other Reliefs</FormLabel>
+                <FormLabel>Pension Pin</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
+                  <Input type="text" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
-            name="has_exemptions"
+            name="nhf_number"
             control={form.control}
             render={({ field }) => (
               <FormItem className="mb-6">
-                <FormLabel>Tax Exemption?</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(value === "true")}
-                  defaultValue={String(field.value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Tax Exemption" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">Yes</SelectItem>
-                    <SelectItem value="false">No</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormLabel>NHF Number</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

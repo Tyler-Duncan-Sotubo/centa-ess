@@ -29,10 +29,10 @@ export interface EmployeeBankDetails {
 export interface EmployeeTaxDetails {
   id: string;
   tin: string;
+  pension_pin: string;
+  nhf_number: string;
   consolidated_relief_allowance: number;
-  other_reliefs: number;
   state_of_residence: string;
-  has_exemptions: boolean;
 }
 
 export type EmployeeGroup = {

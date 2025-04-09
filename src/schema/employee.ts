@@ -45,9 +45,8 @@ export const employeeTaxSchema = z.object({
     message: "State of residence is required",
   }),
   consolidated_relief_allowance: z.number().int().default(0),
-  other_reliefs: z.number().min(0).optional(),
-
-  has_exemptions: z.boolean().default(false),
+  pension_pin: z.string().optional(),
+  nhf_number: z.string().optional(),
 });
 
 export const employeeBankSchema = z.object({
