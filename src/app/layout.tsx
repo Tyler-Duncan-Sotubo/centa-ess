@@ -4,6 +4,8 @@ import "./globals.css";
 import ReactQueryProvider from "@/server/provider/ReactQueryProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { NextAuthProvider } from "@/server/provider/nextAuthProvider";
+import { AuthProvider } from "@/context/AuthContext";
+import { Suspense } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,10 +27,20 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
         <NextAuthProvider>
-          <ReactQueryProvider>
-            {children}
-            <Toaster />
-          </ReactQueryProvider>
+          <AuthProvider>
+            <ReactQueryProvider>
+              <Suspense
+                fallback={
+                  <div className="flex justify-center items-center h-screen">
+                    Loading...
+                  </div>
+                }
+              >
+                {children}
+              </Suspense>
+              <Toaster />
+            </ReactQueryProvider>
+          </AuthProvider>
         </NextAuthProvider>
       </body>
     </html>

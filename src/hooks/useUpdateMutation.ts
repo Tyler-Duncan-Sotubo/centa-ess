@@ -23,7 +23,7 @@ export function useUpdateMutation<T>({
   refetchKey,
   onSuccess,
   onError,
-  method = "PUT",
+  method = "PATCH",
 }: UpdateMutationParams<T>) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -60,7 +60,11 @@ export function useUpdateMutation<T>({
         onClose?.(); // Close modal if provided
 
         if (refetchKey) {
-          queryClient.invalidateQueries({ queryKey: [refetchKey] });
+          refetchKey
+            .split(" ")
+            .forEach((key) =>
+              queryClient.invalidateQueries({ queryKey: [key] })
+            );
         }
 
         onSuccess?.();

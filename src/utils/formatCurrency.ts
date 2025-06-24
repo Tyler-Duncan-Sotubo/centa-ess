@@ -6,5 +6,5 @@ export const formatCurrency = (
     style: "currency",
     currency,
     minimumFractionDigits: 2,
-  }).format(amountInKobo / 100); // Convert kobo to naira
+  }).format(amountInKobo); // Convert kobo to naira
 };

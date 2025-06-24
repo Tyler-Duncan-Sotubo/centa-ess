@@ -35,33 +35,46 @@ function LoginForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    const email = values.email;
-    const password = values.password;
+  const handleLogin = async (email: string, password: string) => {
+    const response = await fetch("/api/custom-login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: { "Content-Type": "application/json" },
+    });
 
-    if (!email || !password) {
-      alert("Please enter both email and password");
+    const data = await response.json();
+
+    if (data.tempToken) {
+      router.push(
+        `/auth/2fa?token=${data.tempToken}&email=${encodeURIComponent(email)}`
+      );
       return;
     }
-
-    setError(null);
-
     try {
-      // Call the NextAuth signIn function
-      const res = await signIn("credentials", {
-        email,
-        password,
+      // Call NextAuth signIn only if no verification is required
+      const signInResult = await signIn("credentials", {
         redirect: false,
+        user: JSON.stringify(data.user),
+        backendTokens: JSON.stringify(data.backendTokens),
+        permissions: JSON.stringify(data.permissions),
       });
-      if (res?.error) {
-        setError(res.error);
+
+      if (signInResult?.error) {
+        setError(signInResult.error);
         return {
-          error: getErrorMessage(res.error),
+          error: getErrorMessage(signInResult.error),
         };
       }
 
-      // Handle successful login here
-      router.push("/dashboard");
+      if (signInResult?.ok) {
+        // 🔑 Decide where to go based on employmentStatus
+        const destination =
+          data.user.employmentStatus === "onboarding"
+            ? "/onboarding"
+            : "/dashboard";
+
+        router.push(destination);
+      }
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         setError(error.response.data.message);
@@ -74,18 +87,37 @@ function LoginForm() {
         };
       }
     }
+  };
+
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    const email = values.email;
+    const password = values.password;
+
+    setError(null);
+    await handleLogin(email, password);
   }
 
   return (
     <section className="flex flex-col justify-between">
       <Form {...form}>
         <h1 className="text-2xl font-bold text-center">Welcome Back</h1>
-        <p className="text-textSecondary text-center text-sm">
-          Log in to your account to continue
-        </p>
+        <div className="text-center text-textSecondary text-md flex justify-center items-center space-x-1">
+          <p>Don&apos;t have an account?</p>
+          <Link
+            href="https://calendly.com/centapayroll/book-a-demo"
+            target="_blank"
+          >
+            <Button
+              variant="link"
+              className="text-buttonPrimary px-0 font-bold"
+            >
+              Book a demo
+            </Button>
+          </Link>
+        </div>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 px-6 py-6 w-full mx-auto"
+          className="space-y-6 px-6 py-6 sm:w-[70%] w-full mx-auto"
         >
           <FormField
             control={form.control}
@@ -113,7 +145,12 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} isPassword />
+                  <Input
+                    type="password"
+                    {...field}
+                    className="py-4"
+                    isPassword
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,13 +180,15 @@ function LoginForm() {
             </Link>
           </section>
 
-          <Button
-            type="submit"
-            isLoading={form.formState.isSubmitting}
-            className="w-full"
-          >
-            Log In
-          </Button>
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              isLoading={form.formState.isSubmitting}
+              className="w-full"
+            >
+              Log In
+            </Button>
+          </div>
         </form>
       </Form>
     </section>

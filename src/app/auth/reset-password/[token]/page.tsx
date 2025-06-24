@@ -43,8 +43,12 @@ const PasswordReset = ({ params }: Params) => {
 
     try {
       const res = await axiosInstance.post(
-        `/api/auth/reset-password/${params.token}`,
-        values,
+        `/api/auth/reset-password`,
+        {
+          token: params.token,
+          password: values.password,
+          passwordConfirmation: values.password_confirmation,
+        },
         {
           withCredentials: true,
         }

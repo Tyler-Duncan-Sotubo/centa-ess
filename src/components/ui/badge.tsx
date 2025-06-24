@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const colors = {
-  brand: "bg-brand hover:bg-brand/80",
+  brand: "bg-monzo-brand hover:bg-brand/80",
   success: "bg-success hover:bg-success/80",
   warning: "bg-warning hover:bg-warning/80",
   error: "bg-error hover:bg-error/80",

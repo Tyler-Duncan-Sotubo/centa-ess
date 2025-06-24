@@ -13,10 +13,25 @@ const config: Config = {
         md: "1rem", // Adjust as needed (17px here)
       },
       colors: {
+        monzo: {
+          error: "#FE4B60",
+          brand: "#007A8B",
+          brandDark: "#00626F",
+          success: "#047857",
+          monzoGreen: "#4BB78F",
+          monzoOrange: "#F1BD76",
+          background: "#001E3A",
+          primary: "#14233C",
+          secondary: "#FFB54D",
+          innerBg: "#868E9C67",
+          textPrimary: "#F6F7FB",
+          textSecondary: "#8E8E93",
+        },
         "custom-blue": "#226DB4",
-        sidebar: "#F7F7FE",
-        brand: "#441fc0",
-        success: "#10B981",
+        sidebar: "#F1F4F9",
+        brand: "#007A8B",
+        brandDark: "#00626F",
+        success: "#047857",
         warning: "#F59E0B",
         error: "#EF4444",
         textPrimary: "#111827",
@@ -30,7 +45,6 @@ const config: Config = {
         buttonPrimaryHover: "#4D70F9 ",
         buttonSecondary: "#E5E7EB",
         buttonSecondaryHover: "#D1D5DB",
-
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",
@@ -75,20 +89,37 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-    },
-    keyframes: {
-      wave: {
-        "0%, 100%": { transform: "translateY(0)" },
-        "50%": { transform: "translateY(-10px)" },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+        wave: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
-    },
-    animation: {
-      "accordion-down": "accordion-down 0.2s ease-out",
-      "accordion-up": "accordion-up 0.2s ease-out",
-      "ball-1": "wave 1s ease-in-out infinite",
-      "ball-2": "wave 1s ease-in-out infinite 0.15s",
-      "ball-3": "wave 1s ease-in-out infinite 0.3s",
-      "ball-4": "wave 1s ease-in-out infinite 0.45s",
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "ball-1": "wave 1s ease-in-out infinite",
+        "ball-2": "wave 1s ease-in-out infinite 0.15s",
+        "ball-3": "wave 1s ease-in-out infinite 0.3s",
+        "ball-4": "wave 1s ease-in-out infinite 0.45s",
+        "spin-slow": "spin 1s linear infinite",
+      },
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

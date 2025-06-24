@@ -58,7 +58,11 @@ export function useCreateMutation<T>({
         onClose?.(); // Close modal if provided
 
         if (refetchKey) {
-          queryClient.invalidateQueries({ queryKey: [refetchKey] });
+          refetchKey
+            .split(" ")
+            .forEach((key) =>
+              queryClient.invalidateQueries({ queryKey: [key] })
+            );
         }
 
         onSuccess?.();

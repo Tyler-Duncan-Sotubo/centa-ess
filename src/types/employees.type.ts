@@ -19,6 +19,28 @@ export interface Employee {
   group_id: string;
 }
 
+export interface IUser {
+  avatar: null;
+  companyId: string;
+  company_name: string;
+  department_name: string;
+  email: string;
+  employee_number: string;
+  first_name: string;
+  group_id: string;
+  id: string;
+  job_role: string;
+  last_name: string;
+  start_date: string;
+  userId: string;
+  location: string;
+  employeeManager: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
 export interface EmployeeBankDetails {
   id: string;
   bank_account_name: string;
