@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"; // You'll need to define this schema
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const EmployeeProfileDetails = ({ form }: { form: any }) => {
   return (
     <>
