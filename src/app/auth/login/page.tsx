@@ -19,7 +19,6 @@ import FormError from "@/components/ui/form-error";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { loginSchema } from "../schema/login";
-import { isAxiosError } from "@/lib/axios";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -43,6 +42,11 @@ function LoginForm() {
     });
 
     const data = await response.json();
+
+    if (data.error) {
+      setError(data.error);
+      return;
+    }
 
     if (data.tempToken) {
       router.push(
@@ -76,16 +80,9 @@ function LoginForm() {
         router.push(destination);
       }
     } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        setError(error.response.data.message);
-        return {
-          error: getErrorMessage(error.response.data.message),
-        };
-      } else {
-        return {
-          error: getErrorMessage(error),
-        };
-      }
+      return {
+        error: error,
+      };
     }
   };
 

@@ -15,6 +15,13 @@ export async function POST(req: NextRequest) {
     );
     const payload = await loginRes.json();
 
+    if (payload.message && payload.message === "Invalid credentials") {
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
+
     if (payload.status === "verification_required") {
       return NextResponse.json(
         {

@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Centa Payroll - ESS",
+  title: "Centa: From Input to Impact—Flawless HR Flow.",
   description: "Employee Self Service Portal for Centa Payroll",
 };
 
