@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["edtech-images.s3.amazonaws.com"], // ✅ Add your image hostname here
+    domains: ["edtech-images.s3.amazonaws.com", "centahr.s3.amazonaws.com"], // ✅ Add your image hostname here
   },
 };
 

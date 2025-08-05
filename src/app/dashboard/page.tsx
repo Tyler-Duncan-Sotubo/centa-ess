@@ -14,6 +14,7 @@ import Loading from "@/components/ui/loading";
 import PageHeader from "@/components/pageHeader";
 import PendingTasksWidget from "@/components/homepage-widgets/PendingTasksWidget";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -68,8 +69,16 @@ const Dashboard = () => {
 
         {/* Left Column – Profile (on desktop), shown after leave on mobile */}
         <div className="md:col-span-5 space-y-6 order-2">
-          <AnnouncementsCard announcements={data.announcements} />
-          <LeaveManagementCard leaves={data.leaveBalance} />
+          {data.announcements && data.announcements.length > 0 ? (
+            <AnnouncementsCard announcements={data.announcements} />
+          ) : (
+            <Skeleton className="h-40 w-full" />
+          )}
+          {data.leaveBalance && data.leaveBalance.length > 0 ? (
+            <LeaveManagementCard leaves={data.leaveBalance} />
+          ) : (
+            <Skeleton className="h-56 w-full" />
+          )}
         </div>
 
         {/* Right Column – Calendar + LeaveManagementCard (only on md+) */}

@@ -39,15 +39,13 @@ export default function Sidebar({
         className="hidden md:flex fixed left-0 top-0 h-screen bg-monzo-background text-monzo-textPrimary border-r p-2 flex-col justify-between overflow-hidden"
       >
         <div>
-          <div className="flex items-center justify-center h-14 mb-4">
-            {!isCollapsed && (
-              <ApplicationLogo
-                className="h-14 w-28"
-                src="/logo.png"
-                alt="Company Logo"
-                link="/dashboard"
-              />
-            )}
+          <div className="flex items-center px-3 h-14 my-6">
+            <ApplicationLogo
+              className={isCollapsed ? "h-14 w-8" : "h-14 w-24"}
+              src={isCollapsed ? "/logo-icon.png" : "/logo-white.png"}
+              alt="Company Logo"
+              link="/dashboard"
+            />
           </div>
 
           <nav className="space-y-2">
@@ -67,7 +65,9 @@ export default function Sidebar({
                       }`}
                     >
                       {icon}
-                      {!isCollapsed && <span>{item.title}</span>}
+                      {!isCollapsed && (
+                        <span className="text-md">{item.title}</span>
+                      )}
                     </Link>
                   </TooltipTrigger>
                   {isCollapsed && (

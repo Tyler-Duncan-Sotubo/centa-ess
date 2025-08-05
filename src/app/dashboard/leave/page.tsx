@@ -10,6 +10,7 @@ import Loading from "@/components/ui/loading";
 import LeaveBalanceCarousel from "./_components/LeaveBalanceCarousel";
 import LeaveRequestTable from "./_components/LeaveRequestTable";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 export default function LeaveOverviewPage() {
   const { data: session } = useSession();
@@ -75,8 +76,18 @@ export default function LeaveOverviewPage() {
         </Button>
       </PageHeader>
 
-      <LeaveBalanceCarousel balance={leaveBalance} />
-      <LeaveRequestTable data={leaveRequests} />
+      {leaveBalance.length === 0 || leaveRequests.length === 0 ? (
+        <EmptyState
+          title="No Leave Balance Found"
+          description="It seems like you have no leave balances at the moment. You can request leave to start the process."
+          image={"/undraw/onboarding.svg"} // or "/images/empty-jobs.png" from public folder
+        />
+      ) : (
+        <>
+          <LeaveBalanceCarousel balance={leaveBalance} />
+          <LeaveRequestTable data={leaveRequests} />
+        </>
+      )}
     </div>
   );
 }

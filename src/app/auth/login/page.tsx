@@ -114,7 +114,7 @@ function LoginForm() {
         </div>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 px-6 py-6 sm:w-[70%] w-full mx-auto"
+          className="space-y-6 px-6 py-6  w-full mx-auto"
         >
           <FormField
             control={form.control}

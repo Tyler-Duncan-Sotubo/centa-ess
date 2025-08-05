@@ -66,8 +66,8 @@ export default function DynamicField({
       <Input
         type="text"
         value={value ?? ""}
-        disabled
-        placeholder="Autofilled after verification"
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Autofilled after verification (you may also enter manually)"
       />
     );
   }

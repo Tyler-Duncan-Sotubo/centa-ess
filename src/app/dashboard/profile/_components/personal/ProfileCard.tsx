@@ -63,9 +63,10 @@ interface ProfileCardProps {
   profile: Profile;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   core: any;
+  avatarUrl?: string;
 }
 
-export function ProfileCard({ profile, core }: ProfileCardProps) {
+export function ProfileCard({ profile, core, avatarUrl }: ProfileCardProps) {
   // determine if we have any existing profile data
   const hasData =
     !!profile.dateOfBirth ||
@@ -92,6 +93,7 @@ export function ProfileCard({ profile, core }: ProfileCardProps) {
         country: profile.country!,
       }
     : {};
+
   return (
     <div className="bg-white rounded-lg p-6 mt-10 border">
       <div className="flex items-center justify-between mb-4">
@@ -108,9 +110,9 @@ export function ProfileCard({ profile, core }: ProfileCardProps) {
         {/* Left: Avatar + Major Details */}
         <div className="flex items-center space-x-6 md::mb-0 mb-6">
           <div className="w-44 h-44 relative flex-shrink-0">
-            {profile.avatarUrl ? (
+            {avatarUrl ? (
               <Image
-                src={profile.avatarUrl}
+                src={avatarUrl}
                 alt={`${profile.firstName} ${profile.lastName}`}
                 fill
                 className="rounded-full object-cover"

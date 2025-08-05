@@ -2,12 +2,18 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { axiosInstance, isAxiosError } from "@/lib/axios";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import React from "react";
 
 export default function TwoFAPage() {
   const [verifyError, setVerifyError] = useState<string | null>(null);
@@ -19,26 +25,28 @@ export default function TwoFAPage() {
   const email = searchParams.get("email");
   const router = useRouter();
 
+  // React Hook Form setup
   const {
-    register,
+    control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<{ code: string }>();
+    resetField,
+  } = useForm<{ code: string }>({ defaultValues: { code: "" } });
 
-  const handleCodeSubmit = async (values: { code: string }) => {
+  // Handle OTP submission
+  const handleCodeSubmit = async ({ code }: { code: string }) => {
     setVerifyError(null);
     try {
       const res = await axiosInstance.post("/api/auth/verify-code", {
-        code: values.code,
+        code,
         tempToken,
       });
 
-      const data = await res.data;
-
-      console.log("Verification response:", data);
+      const data = res.data;
 
       if (data.status === "error") {
         setVerifyError("Invalid code");
+        resetField("code");
         return;
       }
 
@@ -55,55 +63,55 @@ export default function TwoFAPage() {
       }
 
       if (signInRes?.ok) {
-        // 🔑 Decide where to go based on employmentStatus
+        // Decide where to go based on employmentStatus
         const destination =
           data.data.user.employmentStatus === "onboarding"
             ? "/onboarding"
             : "/dashboard";
 
-        console.log("Redirecting to:", destination);
-
         router.push(destination);
       }
     } catch (error) {
       if (isAxiosError(error) && error.response) {
-        console.error("Verification error:", error.response.data.error.message);
-        setVerifyError(error.response.data.error.message);
-        return {
-          error: getErrorMessage(error.response.data.error.message),
-        };
+        setVerifyError(getErrorMessage(error.response.data.error.message));
+        resetField("code");
       } else {
-        return {
-          error: getErrorMessage(error),
-        };
+        setVerifyError(getErrorMessage(error));
+        resetField("code");
       }
     }
   };
 
+  // Handle resend
   const handleResendCode = async () => {
     setResendError(null);
+    try {
+      const res = await axiosInstance.post("/api/auth/resend-code", {
+        tempToken,
+      });
+      const data = res.data;
 
-    const res = await axiosInstance.post("/api/auth/resend-code", {
-      tempToken,
-    });
-
-    const data = await res.data;
-
-    if (data.status === "error") {
-      setResendError("Failed to resend code");
-      return;
+      if (data.status === "error") {
+        setResendError("Failed to resend code");
+        return;
+      }
+      if (data.status === "success") {
+        setResendVisible(true);
+        setResendError(null);
+        setTimeout(() => setResendVisible(false), 10000); // allow resending again after 10s if you want
+      }
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        setResendError(getErrorMessage(error.response.data.error.message));
+      } else {
+        setResendError(getErrorMessage(error));
+      }
+      setResendError("Failed to resend code. Try again.");
     }
-
-    if (data.status === "success") {
-      setResendVisible(true);
-      setResendError(null);
-    }
-
-    // ✅ After first successful resend, permanently show the link
   };
 
   return (
-    <div className="">
+    <div className="max-w-md mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4 text-center">Hold up.</h1>
       <p className="text-center mb-6">
         Protecting your account is one of our top priorities!
@@ -114,18 +122,50 @@ export default function TwoFAPage() {
 
       <form
         onSubmit={handleSubmit(handleCodeSubmit)}
-        className="space-y-4 sm:w-[70%] w-full mx-auto"
+        className="space-y-4 w-full"
       >
-        <Input
-          type="text"
-          placeholder="Enter 6-digit code"
-          className="h-14 text-3xl"
-          {...register("code", { required: true, minLength: 6, maxLength: 6 })}
+        <Controller
+          name="code"
+          control={control}
+          rules={{
+            required: "Code is required",
+            minLength: { value: 6, message: "Code must be 6 digits" },
+            maxLength: 6,
+          }}
+          render={({ field, fieldState }) => (
+            <div>
+              <InputOTP
+                {...field}
+                maxLength={6}
+                containerClassName="justify-center"
+                className="text-4xl"
+              >
+                <InputOTPGroup className="text-4xl">
+                  {[...Array(6)].map((_, index) => (
+                    <React.Fragment key={index}>
+                      <InputOTPSlot
+                        index={index}
+                        className="h-14 w-14 text-3xl sm:h-12 sm:w-12"
+                      />
+                      {index === 2 && <InputOTPSeparator />}
+                    </React.Fragment>
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
+              {fieldState.error && (
+                <p className="text-red-500 text-xs mt-2">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
         />
 
-        {verifyError && <p className="text-red-500 text-sm">{verifyError}</p>}
+        {verifyError && (
+          <p className="text-red-500 text-sm text-center">{verifyError}</p>
+        )}
 
-        <Button type="submit" disabled={isSubmitting} className="w-full ">
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Verifying..." : "Verify Code"}
         </Button>
       </form>
@@ -138,6 +178,7 @@ export default function TwoFAPage() {
             variant="link"
             onClick={handleResendCode}
             className="text-blue-500 font-semibold"
+            type="button"
           >
             Send me a new code
           </Button>

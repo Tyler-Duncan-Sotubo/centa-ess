@@ -19,6 +19,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import PageHeader from "@/components/pageHeader";
 import OptOutDialog from "./_components/OptOutDialog";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 const BenefitPage = () => {
   const { data: session } = useSession();
@@ -140,10 +141,18 @@ const BenefitPage = () => {
       )}
 
       {/* Company Categories */}
-      <div>
-        <h2 className="text-xl font-bold mb-4">Available Benefit Categories</h2>
-        <BenefitCategoryGrid plans={benefits} />
-      </div>
+      {benefits.length === 0 ? (
+        <EmptyState
+          title="No Benefit Categories Available"
+          description="It looks like there are no benefit categories available at this time."
+          image={"/undraw/benefit.svg"} // or "/images/empty-jobs.png" from public folder
+        />
+      ) : (
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold">Available Benefit Categories</h2>
+          <BenefitCategoryGrid plans={benefits} />
+        </div>
+      )}
     </div>
   );
 };

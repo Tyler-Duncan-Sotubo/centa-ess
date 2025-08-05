@@ -12,6 +12,7 @@ import { Loan } from "@/types/loans.type";
 import { ActiveLoanCard } from "./_components/ActiveLoanCard";
 import { SettledLoansTable } from "./_components/SettledLoansTable";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 export default function LoansPage() {
   const { data: session } = useSession();
@@ -77,7 +78,11 @@ export default function LoansPage() {
           ))}
         </div>
       ) : (
-        <p>No active loans.</p>
+        <EmptyState
+          title="No Active Loans"
+          description="You have no active loans or salary advances at the moment."
+          image={"/undraw/wallet.svg"} // or "/images/empty-jobs.png" from public folder
+        />
       )}
 
       {/* ── Settled loans (DataTable) ──────────────────────── */}

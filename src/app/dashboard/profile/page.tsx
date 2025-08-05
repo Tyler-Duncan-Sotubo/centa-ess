@@ -60,7 +60,11 @@ const EmployeeDetailPageDemo = () => {
         </TabsList>
         {/* Personal Info */}
         <TabsContent value="personal" className="space-y-6">
-          <ProfileCard profile={data.profile} core={data.core} />
+          <ProfileCard
+            profile={data.profile}
+            core={data.core}
+            avatarUrl={data.avatarUrl}
+          />
           <HistoryCard
             history={data.history}
             employeeId={session?.user.id as string}

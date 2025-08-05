@@ -14,7 +14,7 @@ import "swiper/css/pagination";
 import MobileNav from "@/components/navigation/MobileNav";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
 

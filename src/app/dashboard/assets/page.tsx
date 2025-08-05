@@ -13,6 +13,7 @@ import { columns } from "./_components/assetsColumn";
 import { AssetCard } from "./_components/AssetCard";
 import { Asset } from "@/types/assets.type";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 export default function AssetsPage() {
   const { data: session } = useSession();
@@ -94,9 +95,11 @@ export default function AssetsPage() {
 
       {/* Assigned Assets */}
       {assets.length === 0 ? (
-        <div className="text-muted-foreground text-center py-12">
-          No assets assigned.
-        </div>
+        <EmptyState
+          title="No Assets Found"
+          description="You have no active asset assigned at the moment."
+          image={"/undraw/assets.svg"} // or "/images/empty-jobs.png" from public folder
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {assets.map((asset: Asset) => (
@@ -105,12 +108,17 @@ export default function AssetsPage() {
         </div>
       )}
 
-      {/* Divider */}
-      <h2 className="text-xl font-semibold">My Asset Requests</h2>
-
       {/* Asset Request Table */}
       <div className="max-w-4xl">
-        <DataTable columns={columns} data={assetRequests} />
+        {assetRequests.length > 0 ? (
+          <>
+            {/* Divider */}
+            <h2 className="text-xl font-semibold">My Asset Requests</h2>
+            <DataTable columns={columns} data={assetRequests} />
+          </>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

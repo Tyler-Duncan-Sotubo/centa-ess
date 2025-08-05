@@ -28,6 +28,7 @@ import PageHeader from "@/components/pageHeader";
 import { useRouter } from "next/navigation";
 import NavBackButton from "@/components/navigation/NavBackButton";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 interface LeaveBalanceRow {
   leaveTypeId: string;
@@ -137,15 +138,19 @@ export default function LeaveRequestPage() {
 
   if (!leaveBalance.length)
     return (
-      <div className="max-w-lg space-y-4">
+      <div className="w-full space-y-4 ">
         <Link href="/dashboard">
           <Button variant="link" className="px-0 text-md">
             <FaChevronCircleLeft className="mr-2" /> Back to Dashboard
           </Button>
         </Link>
-        <p className="text-red-500">
-          You don’t have any leave types assigned. Please contact HR.
-        </p>
+        <div className="mx-aut mt-24">
+          <EmptyState
+            title="No Leave Balance Found"
+            description="You currently have no leave balances available. Please contact HR for assistance."
+            image={"/undraw/onboarding.svg"} // or "/images/empty-jobs.png" from public folder
+          />
+        </div>
       </div>
     );
 

@@ -11,6 +11,7 @@ import PageHeader from "@/components/pageHeader";
 import { DataTable } from "@/components/DataTable";
 import { reimbursementsColumns } from "./_components/reimbursementsColumns";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import EmptyState from "@/components/empty-state";
 
 type Reimbursement = {
   id: string;
@@ -78,17 +79,27 @@ export default function ReimbursementsPage() {
         </Button>
       </PageHeader>
 
-      <Tabs value={filter} onValueChange={setFilter} className="my-6">
-        <TabsList className="justify-start">
-          {["all", "pending", "rejected", "paid"].map((f) => (
-            <TabsTrigger key={f} value={f}>
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
-
-      <DataTable columns={reimbursementsColumns} data={filtered} />
+      {reimbursements.length === 0 ? (
+        <EmptyState
+          title="No Reimbursements Found"
+          description="You have no active reimbursement requests at the moment."
+          image={"/undraw/expense.svg"} // or "/images/empty-jobs.png" from public folder
+        />
+      ) : (
+        <>
+          {" "}
+          <Tabs value={filter} onValueChange={setFilter} className="my-6">
+            <TabsList className="justify-start">
+              {["all", "pending", "rejected", "paid"].map((f) => (
+                <TabsTrigger key={f} value={f}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+          <DataTable columns={reimbursementsColumns} data={filtered} />
+        </>
+      )}
     </div>
   );
 }

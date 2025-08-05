@@ -42,7 +42,12 @@ export default function EmployeeProfileCard({
       setAvatarSrc(base64); // Show preview immediately
 
       // Trigger API call to update avatar
-      await updateProfile({ avatar: base64 });
+      await updateProfile({
+        avatar: base64,
+        email: employee?.email || "",
+        first_name: employee?.first_name || "",
+        last_name: employee?.last_name || "",
+      });
     };
     reader.readAsDataURL(file);
   };

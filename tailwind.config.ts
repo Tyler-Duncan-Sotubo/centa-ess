@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontSize: {
-        md: "1rem", // Adjust as needed (17px here)
+        md: ".9rem", // Adjust as needed (17px here)
       },
       colors: {
         monzo: {
