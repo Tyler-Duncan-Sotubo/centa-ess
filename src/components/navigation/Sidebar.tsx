@@ -16,8 +16,6 @@ import {
   TbLayoutSidebarRightCollapseFilled,
   TbLayoutSidebarLeftCollapseFilled,
 } from "react-icons/tb";
-import { signOut } from "next-auth/react";
-import { MdLogout } from "react-icons/md";
 
 export default function Sidebar({
   isCollapsed,
@@ -39,7 +37,7 @@ export default function Sidebar({
         className="hidden md:flex fixed left-0 top-0 h-screen bg-monzo-background text-monzo-textPrimary border-r p-2 flex-col justify-between overflow-hidden"
       >
         <div>
-          <div className="flex items-center px-3 h-14 my-6">
+          <div className="flex items-center sm:px-3 h-14 my-6">
             <ApplicationLogo
               className={isCollapsed ? "h-14 w-8" : "h-14 w-24"}
               src={isCollapsed ? "/logo-icon.png" : "/logo-white.png"}
@@ -76,23 +74,6 @@ export default function Sidebar({
                 </Tooltip>
               );
             })}
-            <button
-              onClick={() => signOut()}
-              className="flex items-center gap-2 px-3 py-2 rounded text-monzo-textPrimary hover:bg-monzo-brand"
-            >
-              {!isCollapsed ? (
-                <>
-                  <MdLogout size={20} />
-                  <span className="material-symbols-outlined text-base">
-                    Logout
-                  </span>
-                </>
-              ) : (
-                <div>
-                  <MdLogout size={20} />
-                </div>
-              )}
-            </button>
           </nav>
         </div>
 

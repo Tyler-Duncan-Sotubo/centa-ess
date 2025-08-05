@@ -52,10 +52,10 @@ const MobileNav = () => {
             })}
             <button
               onClick={() => signOut()}
-              className="mt-2 flex items-center gap-3 rounded px-3 py-2 text-base font-medium text-monzo-textPrimary hover:bg-monzo-brand/10"
+              className="flex items-center gap-3 rounded px-3 py-2 text-base font-medium text-monzo-error hover:bg-monzo-brand/10"
             >
               <MdLogout size={20} />
-              <span>Logout</span>
+              <span className="">Logout</span>
             </button>
           </nav>
         </SheetContent>

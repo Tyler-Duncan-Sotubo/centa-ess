@@ -47,7 +47,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Navbar sidebarCollapsed={sidebarCollapsed} />
 
         {/* Mobile Header */}
-        <header className="flex justify-between items-center px-1 md:hidden">
+        <header className="flex justify-between items-center px-3 md:hidden">
           <ApplicationLogo
             className="h-16 w-28"
             src="/logo.png"
