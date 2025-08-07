@@ -16,6 +16,7 @@ import PayslipDetailsTable from "./_components/PayslipDetails";
 import { ProfileCard } from "./_components/personal/ProfileCard";
 import PageHeader from "@/components/pageHeader";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { FaUser, FaBriefcase, FaWallet, FaFileAlt } from "react-icons/fa";
 
 const EmployeeDetailPageDemo = () => {
   const { data: session, status } = useSession();
@@ -52,11 +53,23 @@ const EmployeeDetailPageDemo = () => {
       />
       {/* Tabs */}
       <Tabs defaultValue="personal" className="space-y-4">
-        <TabsList className="bg-sidebar rounded-md p-1">
-          <TabsTrigger value="personal">Personal</TabsTrigger>
-          <TabsTrigger value="job">Job</TabsTrigger>
-          <TabsTrigger value="payroll">Payroll</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
+        <TabsList>
+          <TabsTrigger value="personal">
+            <FaUser className="mr-2 text-brand" />
+            Personal
+          </TabsTrigger>
+          <TabsTrigger value="job">
+            <FaBriefcase className="mr-2 text-monzo-secondary" />
+            Job
+          </TabsTrigger>
+          <TabsTrigger value="payroll">
+            <FaWallet className="mr-2 text-monzo-monzoGreen" />
+            Payroll
+          </TabsTrigger>
+          <TabsTrigger value="documents">
+            <FaFileAlt className="mr-2 text-monzo-monzoOrange" />
+            Documents
+          </TabsTrigger>
         </TabsList>
         {/* Personal Info */}
         <TabsContent value="personal" className="space-y-6">

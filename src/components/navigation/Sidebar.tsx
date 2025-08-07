@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -16,6 +16,7 @@ import {
   TbLayoutSidebarRightCollapseFilled,
   TbLayoutSidebarLeftCollapseFilled,
 } from "react-icons/tb";
+import { FaChevronDown } from "react-icons/fa";
 
 export default function Sidebar({
   isCollapsed,
@@ -25,6 +26,14 @@ export default function Sidebar({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+
+  const handleToggle = (title: string) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
     <TooltipProvider>
@@ -49,29 +58,98 @@ export default function Sidebar({
           <nav className="space-y-2">
             {main.map((item) => {
               const isActive = pathname === item.link;
+              const isParentActive =
+                pathname.startsWith(item.link) &&
+                item.subItems &&
+                pathname !== item.link;
+
               const icon = item.icon;
+              const hasSubItems = item.subItems && item.subItems.length > 0;
+
+              // Read open/close state from object
+              const isOpen = openMenus[item.title] || false;
 
               return (
-                <Tooltip key={item.title} delayDuration={300}>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href={item.link ?? "#"}
-                      className={`flex w-full items-center gap-2 px-3 py-2 rounded ${
-                        isActive
-                          ? "text-monzo-monzoGreen font-semibold"
-                          : "hover:bg-monzo-brand"
-                      }`}
-                    >
-                      {icon}
-                      {!isCollapsed && (
-                        <span className="text-md">{item.title}</span>
+                <div key={item.title} className="w-full">
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger asChild>
+                      {hasSubItems ? (
+                        <button
+                          onClick={() => handleToggle(item.title)}
+                          className={`flex w-full items-center justify-between px-3 py-2 rounded transition-colors ${
+                            isActive || isParentActive
+                              ? "text-monzo-monzoGreen font-semibold"
+                              : "hover:bg-monzo-brand"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            {icon}
+                            {!isCollapsed && (
+                              <span className="text-md">{item.title}</span>
+                            )}
+                          </div>
+                          {!isCollapsed && (
+                            <motion.div
+                              animate={{ rotate: isOpen ? 180 : 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <FaChevronDown size={16} />
+                            </motion.div>
+                          )}
+                        </button>
+                      ) : (
+                        <Link
+                          href={item.link ?? "#"}
+                          className={`flex w-full items-center gap-2 px-3 py-2 rounded transition-colors ${
+                            isActive
+                              ? "text-monzo-monzoGreen font-semibold"
+                              : "hover:bg-monzo-brand"
+                          }`}
+                        >
+                          {icon}
+                          {!isCollapsed && (
+                            <span className="text-md">{item.title}</span>
+                          )}
+                        </Link>
                       )}
-                    </Link>
-                  </TooltipTrigger>
-                  {isCollapsed && (
-                    <TooltipContent side="right">{item.title}</TooltipContent>
+                    </TooltipTrigger>
+                    {isCollapsed && (
+                      <TooltipContent side="right">{item.title}</TooltipContent>
+                    )}
+                  </Tooltip>
+
+                  {/* Subitems */}
+                  {hasSubItems && !isCollapsed && (
+                    <motion.div
+                      initial={false}
+                      animate={{
+                        height: isOpen ? "auto" : 0,
+                        opacity: isOpen ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden ml-4"
+                    >
+                      {item.subItems.map((subItem) => {
+                        const isSubActive = pathname === subItem.link; // <-- move here!
+
+                        return (
+                          <Link
+                            key={subItem.title}
+                            href={subItem.link}
+                            className={`py-2.5 px-3 text-sm rounded transition-colors flex gap-2 ${
+                              isSubActive
+                                ? "text-monzo-monzoGreen font-semibold"
+                                : "hover:bg-monzo-brand"
+                            }`}
+                          >
+                            {subItem.icon}
+                            {subItem.title}
+                          </Link>
+                        );
+                      })}
+                    </motion.div>
                   )}
-                </Tooltip>
+                </div>
               );
             })}
           </nav>

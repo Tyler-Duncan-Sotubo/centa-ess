@@ -1,8 +1,11 @@
 export interface Employee {
   id: string;
   employee_number: number;
+  employeeNumber: number;
   first_name: string;
   last_name: string;
+  firstName: string;
+  lastName: string;
   name: string;
   job_title: string;
   phone?: string;

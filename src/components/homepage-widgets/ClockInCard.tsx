@@ -180,16 +180,16 @@ export default function ClockInCard() {
 
   return (
     <section className="w-full max-h-28 p-5 rounded-lg bg-card border flex flex-col gap-4">
-      <div className="flex items-center justify-between px-0">
+      <div className="flex items-center justify-between px-0 gap-4">
         <div>
-          <div className="text-md font-semibold text-foreground">
+          <div className="text-sm font-semibold text-foreground">
             {clockOutTime
               ? "You clocked out"
               : isRunning
               ? "You are clocked in"
               : "Clock In"}
           </div>
-          <div className="text-2xl font-bold">
+          <div className="text-xl font-bold">
             {clockOutTime
               ? fmt(clockOutTime)
               : clockInTime

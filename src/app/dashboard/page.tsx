@@ -48,6 +48,8 @@ const Dashboard = () => {
   if (status === "loading" || isLoading) return <Loading />;
   if (isError) return <p>Error loading data</p>;
 
+  console.log("Dashboard data:", data);
+
   return (
     <div>
       <PageHeader
@@ -74,7 +76,7 @@ const Dashboard = () => {
           ) : (
             <Skeleton className="h-40 w-full" />
           )}
-          {data.leaveBalance && data.leaveBalance.length > 0 ? (
+          {data.leaveBalance ? (
             <LeaveManagementCard leaves={data.leaveBalance} />
           ) : (
             <Skeleton className="h-56 w-full" />

@@ -84,10 +84,7 @@ export default function AssetsPage() {
         title="My Assets"
         description="View assets assigned and your request history."
       >
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/assets/request")}
-        >
+        <Button onClick={() => router.push("/dashboard/assets/request")}>
           <Plus className="mr-2 h-4 w-4" />
           New Request
         </Button>

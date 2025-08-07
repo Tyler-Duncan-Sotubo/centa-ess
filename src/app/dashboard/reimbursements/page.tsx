@@ -11,6 +11,12 @@ import PageHeader from "@/components/pageHeader";
 import { DataTable } from "@/components/DataTable";
 import { reimbursementsColumns } from "./_components/reimbursementsColumns";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import {
+  FaListUl,
+  FaClock,
+  FaTimesCircle,
+  FaCheckCircle,
+} from "react-icons/fa";
 import EmptyState from "@/components/empty-state";
 
 type Reimbursement = {
@@ -24,6 +30,29 @@ type Reimbursement = {
   paymentMethod: string;
   rejectionReason?: string | null;
 };
+
+const tabOptions = [
+  {
+    value: "all",
+    label: "All",
+    icon: <FaListUl className="w-4 h-4 text-brand" />,
+  },
+  {
+    value: "pending",
+    label: "Pending",
+    icon: <FaClock className="w-4 h-4 text-error" />,
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+    icon: <FaTimesCircle className="w-4 h-4 text-error" />,
+  },
+  {
+    value: "paid",
+    label: "Paid",
+    icon: <FaCheckCircle className="w-4 h-4 text-success" />,
+  },
+];
 
 export default function ReimbursementsPage() {
   const { data: session } = useSession();
@@ -72,7 +101,6 @@ export default function ReimbursementsPage() {
         description="View and manage your reimbursement requests."
       >
         <Button
-          variant="outline"
           onClick={() => router.push("/dashboard/reimbursements/request")}
         >
           + New Request
@@ -87,12 +115,16 @@ export default function ReimbursementsPage() {
         />
       ) : (
         <>
-          {" "}
           <Tabs value={filter} onValueChange={setFilter} className="my-6">
             <TabsList className="justify-start">
-              {["all", "pending", "rejected", "paid"].map((f) => (
-                <TabsTrigger key={f} value={f}>
-                  {f.charAt(0).toUpperCase() + f.slice(1)}
+              {tabOptions.map(({ value, label, icon }) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className="flex items-center gap-2"
+                >
+                  {icon}
+                  {label}
                 </TabsTrigger>
               ))}
             </TabsList>

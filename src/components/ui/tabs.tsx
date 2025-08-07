@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-start rounded-md bg-sidebar", // gray background for all
+      "flex border-b border-border space-x-12", // white bg, bottom border
       className
     )}
     {...props}
@@ -34,16 +34,16 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "px-6 py-2 flex bg-sidebar justify-center items-center space-x-2 text-md transition-all border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-textSecondary font-bold data-[state=active]:bg-white data-[state=active]:text-brand data-[state=active]:shadow-md data-[state=active]:rounded-md data-[state=active]:h-9",
+      "relative inline-flex items-center justify-center whitespace-nowrap px-1 py-4 text-md font-semibold text-muted-foreground transition-colors hover:text-foreground data-[state=active]:text-brandDark data-[state=active]:font-bold focus:outline-none",
+      "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-brandDark after:transition-transform after:origin-left data-[state=active]:after:scale-x-100",
       className
     )}
     {...props}
   >
-    {icon && <span className="flex items-center">{icon}</span>}
-    <span>{children}</span>
+    {icon && <span className="mr-2 text-lg">{icon}</span>}
+    {children}
   </TabsPrimitive.Trigger>
 ));
-
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
@@ -52,10 +52,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn(
-      "mt-2 ring-offset-sidebar focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      className
-    )}
+    className={cn("mt-8 focus-visible:outline-none", className)}
     {...props}
   />
 ));

@@ -62,10 +62,7 @@ export default function LoansPage() {
         title="Loans & Salary Advances"
         description="Review active loans and history."
       >
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/loans/request")}
-        >
+        <Button onClick={() => router.push("/dashboard/loans/request")}>
           <FaPlus className="mr-1" /> New Request
         </Button>
       </PageHeader>

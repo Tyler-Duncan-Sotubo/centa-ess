@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-monzo-brand text-textInverse shadow hover:bg-monzo-brandDark",
+          "bg-monzo-brandDark text-textInverse shadow hover:bg-monzo-brandDark",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 font-semibold",
         outline:

@@ -68,19 +68,16 @@ export default function LeaveOverviewPage() {
         title="Leave Overview"
         description="View your leave balances and request history."
       >
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/leave/request")}
-        >
+        <Button onClick={() => router.push("/dashboard/leave/request")}>
           + New Request
         </Button>
       </PageHeader>
 
-      {leaveBalance.length === 0 || leaveRequests.length === 0 ? (
+      {!leaveBalance || Object.keys(leaveBalance).length === 0 ? (
         <EmptyState
           title="No Leave Balance Found"
           description="It seems like you have no leave balances at the moment. You can request leave to start the process."
-          image={"/undraw/onboarding.svg"} // or "/images/empty-jobs.png" from public folder
+          image={"/undraw/onboarding.svg"}
         />
       ) : (
         <>
